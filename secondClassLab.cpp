@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <fstream>
 #include <string>
 using namespace std;
 
@@ -39,6 +40,16 @@ public:
 		o.status = (b == 1) ? "done" : "inProgress";
 		return o;
 	}
+	Order(ifstream& in) {
+		getline(in, this->goods);
+		getline(in, this->date);
+		in >> this->number;
+		in >> this->price;
+		cin.ignore(INT_MAX, '\n');
+		bool b = 1;
+		cin >> b;
+		this->status = (b == 1) ? "done" : "inProgress";
+	}
 	string getStatus() {
 		return this->status;
 	}
@@ -50,18 +61,25 @@ public:
 		cout << "Data of order: " << date << endl;
 		cout << "Status of payment: " << status << endl;
 	}
+	void writeToFile(ofstream& of) {
+		of << this->goods <<endl<< this->date << endl<< this->price << endl << this->number << endl << this->status << endl;
+	}
 };
 
 class Storage {
+	int n;
 	map < string, pair <vector <Order>, vector <Order> > > clients;
 public:
+	Storage() {
+		n = 0;
+	}
 	void addOrder(string snp,Order o) {
+		n += 1;
 		if (o.getStatus() == "done")  clients[snp].first.push_back(o); 
 		else
 			clients[snp].second.push_back(o);
 	}
 	void getInfo() {
-		//if (clients.size() == 0) { cout << "Storage is empty!\n"; return; }
 		for (pair < string, pair <vector <Order>, vector <Order> > > client : clients) {
 			cout << "==========================================\n";
 			cout << "Snp: " << client.first << endl;
@@ -80,6 +98,40 @@ public:
 			for (int i = 0; i < client.second.second.size(); i += 1) {
 				client.second.second[i].out();
 			}
+		}
+	}
+	void WriteToFile() {
+		char filename[256];
+		cout << "Enter path to file\n";
+		gets_s(filename);
+		ofstream file(filename);
+		if (!file) {
+			cout << "Error!";
+			exit(1);
+		}
+		for (pair < string, pair <vector <Order>, vector <Order> > > client : clients) {
+			if (client.second.first.size() == 0) { cout << "No orders\n"; }
+			for (int i = 0; i < client.second.first.size(); i += 1) {
+				client.second.first[i].writeToFile(file);
+			}
+			for (int i = 0; i < client.second.second.size(); i += 1) {
+				client.second.second[i].writeToFile(file);
+			}
+		}
+	}
+	void readFromFile() {
+		char filename[256];
+		cout << "Enter path to file\n";
+		gets_s(filename);
+		ifstream file(filename);
+		if (!file) {
+			cout << "Error!";
+			exit(1);
+		}
+		file >> this->n;
+		for (int i = 1; i <= n; i++) {
+			Order o(file);
+			this->addOrder(o);
 		}
 	}
 };
