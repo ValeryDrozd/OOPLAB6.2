@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <string>
 using namespace std;
 
 class Order {
@@ -13,12 +14,30 @@ public:
 	Order() {
 
 	}
+
 	Order(string goods, string date, int price,int number, string status) {
 		this->goods = goods;
 		this->date = date;
 		this->price = price;
 		this->number = number;
 		this->status = status;
+	}
+	Order makeOrder(){
+		Order o;
+		cout << "Enter name of goods: ";
+		getline(cin, o.goods);
+		cout << "Enter number of goods: ";
+		cin >> o.number;
+		cout << "Enter price of goods: ";
+		cin >> o.price;
+		cout << "Enter date of order: ";
+		cin.ignore(INT_MAX, '\n');
+		getline(cin, o.date);
+		bool b = 1;
+		cout << "Enter 1 if you paid for it else 0"<<endl;
+		cin >> b;
+		o.status = (b == 1) ? "done" : "inProgress";
+		return o;
 	}
 	string getStatus() {
 		return this->status;
@@ -67,21 +86,26 @@ public:
 
 int main() {
 	Storage s;
-	Order o("Phones", "20.09.2019", 100000, 10, "done");
-	s.addOrder("Client1", o);
-	o = Order("Laptops", "30.10.2019", 200000, 10, "done");
-	s.addOrder("Client1", o);
-	o = Order("Gun", "30.01.2020", 50000, 2, "inProgress");
-	s.addOrder("Mafia", o);
-	o = Order("Drugs", "30.01.2020", 50000, 10, "inProgress");
-	s.addOrder("Mafia", o);
-	o = Order("Ammo", "30.01.2020",50000,10000,"inProgress");
-	s.addOrder("Mafia", o);
-	o = Order("CopiedDollars", "31.01.2020", 50000, 5000, "done");
-	s.addOrder("AnotherMafia", o);
-	o = Order("Gold","01.02.2020",500000,100,"done");
-	s.addOrder("AnotherMafia", o);
-	o = Order("Bomb", "02.02.2020", 50000, 10, "done");
-	s.addOrder("USAGovernment", o);
-	s.getInfo();
+	int cmd;
+	string name;
+	Order o;
+	while (1) {
+		cout << "Enter 1 to make new order\n";
+		cout << "Enter 2 to show all orders\n";
+		cout << "Enter anything else to exit\n";
+		cin >> cmd;
+		switch (cmd)
+		{
+		case(1):
+			cout << "Enter client's name\n";
+			cin.ignore(INT_MAX, '\n');
+			getline(cin, name);
+			s.addOrder(name, o.makeOrder());
+			break;
+		case(2):
+			s.getInfo();
+		default:
+			break;
+		}
+	}
 }
