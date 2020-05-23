@@ -109,8 +109,10 @@ public:
 			cout << "Error!";
 			exit(1);
 		}
+		file << clients.size() << endl;
 		for (pair < string, pair <vector <Order>, vector <Order> > > client : clients) {
-			if (client.second.first.size() == 0) { cout << "No orders\n"; }
+			cout << client.first << endl;
+			cout << client.second.first.size() + client.second.second.size() << endl; 
 			for (int i = 0; i < client.second.first.size(); i += 1) {
 				client.second.first[i].writeToFile(file);
 			}
@@ -129,9 +131,15 @@ public:
 			exit(1);
 		}
 		file >> this->n;
+		string snp;
+		int m;
 		for (int i = 1; i <= n; i++) {
-			Order o(file);
-			this->addOrder(o);
+			getline(file, snp);
+			file >> m;
+			for (int j = 1; j <= m; j++) {
+				Order o(file);
+				this->addOrder(snp,o);
+			}
 		}
 	}
 };
