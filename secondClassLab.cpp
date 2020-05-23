@@ -149,7 +149,8 @@ int main() {
 	int cmd;
 	string name;
 	Order o;
-	while (1) {
+	bool run = 1;
+	while (run) {
 		cout << "Enter 1 to make new order\n";
 		cout << "Enter 2 to show all orders\n";
 		cout << "Enter anything else to exit\n";
@@ -165,6 +166,7 @@ int main() {
 		case(2):
 			s.getInfo();
 		default:
+			run = 0;
 			break;
 		}
 	}
