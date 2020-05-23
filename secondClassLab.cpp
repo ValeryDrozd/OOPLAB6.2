@@ -103,6 +103,7 @@ public:
 	void WriteToFile() {
 		char filename[256];
 		cout << "Enter path to file\n";
+		cin.ignore(INT_MAX, '\n');
 		gets_s(filename);
 		ofstream file(filename);
 		if (!file) {
@@ -124,6 +125,7 @@ public:
 	void readFromFile() {
 		char filename[256];
 		cout << "Enter path to file\n";
+		cin.ignore(INT_MAX, '\n');
 		gets_s(filename);
 		ifstream file(filename);
 		if (!file) {
