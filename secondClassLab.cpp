@@ -153,6 +153,8 @@ int main() {
 	while (run) {
 		cout << "Enter 1 to make new order\n";
 		cout << "Enter 2 to show all orders\n";
+		cout << "Enter 3 to read orders from the file\n";
+		cout << "Enter 4 to write orders to the file\n";
 		cout << "Enter anything else to exit\n";
 		cin >> cmd;
 		switch (cmd)
@@ -165,6 +167,12 @@ int main() {
 			break;
 		case(2):
 			s.getInfo();
+		case(3):
+			s.readFromFile();
+			break;
+		case(4):
+			s.WriteToFile();
+			break;
 		default:
 			run = 0;
 			break;
