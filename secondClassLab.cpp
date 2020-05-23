@@ -41,13 +41,13 @@ public:
 		return o;
 	}
 	Order(ifstream& in) {
+		in.ignore(INT_MAX, '\n');
 		getline(in, this->goods);
 		getline(in, this->date);
-		in >> this->number;
 		in >> this->price;
-		cin.ignore(INT_MAX, '\n');
+		in >> this->number;
 		bool b = 1;
-		cin >> b;
+		in >> b;
 		this->status = (b == 1) ? "done" : "inProgress";
 	}
 	string getStatus() {
@@ -62,7 +62,7 @@ public:
 		cout << "Status of payment: " << status << endl;
 	}
 	void writeToFile(ofstream& of) {
-		of << this->goods <<endl<< this->date << endl<< this->price << endl << this->number << endl << this->status << endl;
+		of << this->goods <<endl<< this->date << endl<< this->price << endl << this->number << endl << (this->status=="done") << endl;
 	}
 };
 
@@ -112,8 +112,8 @@ public:
 		}
 		file << clients.size() << endl;
 		for (pair < string, pair <vector <Order>, vector <Order> > > client : clients) {
-			cout << client.first << endl;
-			cout << client.second.first.size() + client.second.second.size() << endl; 
+			file << client.first << endl;
+			file << client.second.first.size() + client.second.second.size() << endl; 
 			for (int i = 0; i < client.second.first.size(); i += 1) {
 				client.second.first[i].writeToFile(file);
 			}
@@ -132,14 +132,17 @@ public:
 			cout << "Error!";
 			exit(1);
 		}
+		int t;
 		file >> this->n;
+		t = this->n;
 		string snp;
 		int m;
-		for (int i = 1; i <= n; i++) {
+		for (int i = 1; i <= t; i++) {
+			file.ignore(256, '\n');
 			getline(file, snp);
 			file >> m;
 			for (int j = 1; j <= m; j++) {
-				Order o(file);
+				Order o = Order(file);
 				this->addOrder(snp,o);
 			}
 		}
@@ -169,6 +172,7 @@ int main() {
 			break;
 		case(2):
 			s.getInfo();
+			break;
 		case(3):
 			s.readFromFile();
 			break;
